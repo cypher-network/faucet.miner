@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="880" d:DesignHeight="550"
+             x:Class="Miner.Views.MinerView">
+
+    <Panel>
+        <Image Width="250" Height="60" Source="/Assets/cypherpunkswritecode.png" VerticalAlignment="Top" HorizontalAlignment="Left" Stretch="UniformToFill" Margin="35,25, 10, 10"/>
+        <TextBlock FontSize="15" FontWeight="Bold" Text="{Binding Greeting}"  VerticalAlignment="Top" TextAlignment="Right" Margin="10,45"/>
+        <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto, Auto, 30, Auto, Auto, Auto" Margin="50,100,0,0" ShowGridLines="False">
+            <TextBlock Grid.Row="0" Grid.Column="0" FontSize="50" FontWeight="ExtraBold" Text="Next block in:" MinWidth="120" TextAlignment="Center" Margin="70,25,0,0"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" FontSize="90" FontWeight="ExtraBold" Text="{Binding CountDown}" MinWidth="120" TextAlignment="Center" Margin="70,0,0,0"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Text="Your Cypher address:" MinWidth="120" TextAlignment="Left" VerticalAlignment="Center" Margin="12"/>
+            <TextBox Grid.Row="4" Grid.Column="0" Text="{Binding Address}" VerticalAlignment="Center" MinWidth="780" MaxWidth="780"/>
+            <Button Command="{Binding StartCommand}" Width="120" Height="100" Grid.Row="5" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="{Binding StartCommandContent}" Margin="350,30,0,0"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" FontWeight="Bold" Text="Connected"  VerticalAlignment="Bottom" TextAlignment="Right" Margin="00,0" IsVisible="{Binding Connected}"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" FontWeight="Bold" Text="Sent:"  VerticalAlignment="Bottom" TextAlignment="Left" Margin="00,20" IsVisible="{Binding Connected}"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" FontWeight="Bold" Text="{Binding SentProofCount}"  VerticalAlignment="Bottom" TextAlignment="Left" Margin="75,20" IsVisible="{Binding Connected}"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" FontWeight="Bold" Text="Coin:"  VerticalAlignment="Bottom" TextAlignment="Left" Margin="00,0" IsVisible="{Binding Connected}"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" FontWeight="Bold" Text="{Binding Reward}"  VerticalAlignment="Bottom" TextAlignment="Left" Margin="75,0" IsVisible="{Binding Connected}"/>
+
+        </Grid>
+    </Panel>
+    
+</UserControl>

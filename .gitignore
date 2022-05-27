@@ -1,0 +1,49 @@
+# IDE
+/.vscode
+/.vs
+.idea/.idea.faucet.miner/.idea/riderModule.iml
+.idea/.idea.faucet.miner/.idea/.gitignore
+.idea/.idea.faucet.miner/.idea/.name
+
+# misc
+/bin
+/obj
+.DS_Store
+
+**/appsettings.Development.json
+**/snapshot
+
+*.Jnrl
+*.rhp
+*.rol
+*.dll
+*.xml
+*.pdb
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.log
+*.db
+
+workspace.code-workspace
+publish/**
+install/windows/.vs/
