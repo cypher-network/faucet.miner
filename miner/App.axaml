@@ -1,7 +1,15 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Miner"
-             x:Class="Miner.App">
+             x:Class="Miner.App"
+             Name="Miner">
+
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="Welcome to $Miner ♥" />
+        </NativeMenu>
+    </NativeMenu.Menu>
+    
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
