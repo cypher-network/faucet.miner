@@ -287,7 +287,7 @@ cleanup() {
 }
 
 finish() {
-  printf "\n\n  %b To run the wallet type: miner" "${INFO}"
+  printf "\n\n  %b To run the miner type: miner" "${INFO}"
   printf "\n\n  %b Installation successful\n\n" "${DONE}"
 }
 
