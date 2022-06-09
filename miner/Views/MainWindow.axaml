@@ -13,7 +13,8 @@
         Width="880" Height="550" CanResize="False"
         x:Class="Miner.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Cypminer">
+        Title="Miner">
+    
     <Panel>
         <ExperimentalAcrylicBorder IsHitTestVisible="False">
             <ExperimentalAcrylicBorder.Material>
@@ -30,5 +31,4 @@
             </rxui:RoutedViewHost.DefaultContent>
         </rxui:RoutedViewHost>
     </Panel>
-  
 </Window>

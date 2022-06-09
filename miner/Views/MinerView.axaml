@@ -11,7 +11,7 @@
         <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto, Auto, 30, Auto, Auto, Auto" Margin="50,100,0,0" ShowGridLines="False">
             <TextBlock Grid.Row="0" Grid.Column="0" FontSize="50" FontWeight="ExtraBold" Text="Next block in:" MinWidth="120" TextAlignment="Center" Margin="70,25,0,0"/>
             <TextBlock Grid.Row="1" Grid.Column="0" FontSize="90" FontWeight="ExtraBold" Text="{Binding CountDown}" MinWidth="120" TextAlignment="Center" Margin="70,0,0,0"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Text="Your Cypher address:" MinWidth="120" TextAlignment="Left" VerticalAlignment="Center" Margin="12"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" FontSize="16" FontWeight="SemiBold" Text="Your cypher pub address:" MinWidth="120" TextAlignment="Left" VerticalAlignment="Center" Margin="12"/>
             <TextBox Grid.Row="4" Grid.Column="0" Text="{Binding Address}" VerticalAlignment="Center" MinWidth="780" MaxWidth="780"/>
             <Button Command="{Binding StartCommand}" Width="120" Height="100" Grid.Row="5" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="{Binding StartCommandContent}" Margin="350,30,0,0"/>
             <TextBlock Grid.Row="5" Grid.Column="0" FontSize="15" FontWeight="Bold" Text="Connected"  VerticalAlignment="Bottom" TextAlignment="Right" Margin="00,0" IsVisible="{Binding Connected}"/>
