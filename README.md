@@ -13,7 +13,9 @@ https://dotnet.microsoft.com/en-us/download
 
 For quick installation on Linux and macOS, execute the following command:
 
-`bash <(curl -sSL https://raw.githubusercontent.com/cypher-network/faucet.miner/main/miner/Install/install.sh)`
+```shell
+bash <(curl -sSL https://raw.githubusercontent.com/cypher-network/faucet.miner/main/miner/Install/install.sh)
+```
 
 The following parameters can be supplied:
 
@@ -26,13 +28,17 @@ Uninstall wallet
 
 For example:
 
-`bash <(curl -sSL https://raw.githubusercontent.com/cypher-network/faucet.miner/main/miner/Install/install.sh)) --uninstall`
+```shell
+bash <(curl -sSL https://raw.githubusercontent.com/cypher-network/faucet.miner/main/miner/Install/install.sh)) --uninstall
+```
 
 ### Microsoft Windows
 
 For quick installation on Windows, execute the following command in Powershell:
 
-`(new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/cypher-network/faucet.miner/main/miner/Install/install.ps1") | iex`
+```powershell
+(new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/cypher-network/faucet.miner/main/miner/Install/install.ps1") | iex
+```
 
 ## Contribution
 
