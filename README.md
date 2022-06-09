@@ -1,6 +1,6 @@
 # gui cypher faucet miner
 
-[![Build miner](https://github.com/cypher-network/faucet.miner/workflows/build%20miner/badge.svg)](https://github.com/cypher-network/faucet.miner/commits/main/)
+[![Build miner](https://github.com/cypher-network/faucet.miner/workflows/build%20cypher%20miner/badge.svg)](https://github.com/cypher-network/faucet.miner/commits/main/)
 [![GitHub release](https://img.shields.io/github/release/cypher-network/faucet.miner.svg)](https://GitHub.com/cypher-network/faucet.miner/releases/)
 
 
