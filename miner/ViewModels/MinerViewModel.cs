@@ -23,7 +23,7 @@ public class MinerViewModel : ViewModelBase
     private readonly ISessionService _sessionService;
     private readonly IBlockchain _blockchain;
 
-    public string Greeting => "Welcome to $Miner ♥";
+    public string Greeting => $"$Miner ♥ v{Utils.GetAssemblyVersion()}";
     public ICommand StartCommand { get; }
 
     /// <summary>

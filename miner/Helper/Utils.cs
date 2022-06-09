@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 
 namespace Miner.Helper;
@@ -98,5 +99,14 @@ public static class Utils
     public static long GetAdjustedTimeAsUnixTimestamp(uint timeStampMask)
     {
         return GetAdjustedTimeAsUnixTimestamp() & ~timeStampMask;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public static string GetAssemblyVersion()
+    {
+        return Assembly.GetExecutingAssembly().GetName().Version.ToString();
     }
 }
