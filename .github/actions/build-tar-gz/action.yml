@@ -1,0 +1,28 @@
+name: Build - tar.gz
+description: 'Build .tar.gz release'
+
+inputs:
+  runtime:
+    description: '.NET runtime'
+    required: true
+  
+runs:
+  using: "composite"
+  steps:
+
+  - name: Build release
+    run: dotnet publish miner --configuration Release --self-contained --runtime ${{ inputs.runtime }} --output publish/miner/${{ inputs.runtime }}
+    shell: bash
+
+  - name: Package tar.gz
+    run: |
+      pushd publish/miner/${{ inputs.runtime }}/
+
+      tar -czf "cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.tar.gz" *
+      sha256sum cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.tar.gz > cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.tar.gz.sha256
+        
+      mv cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.tar.gz        ${{ github.workspace }}
+      mv cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.tar.gz.sha256 ${{ github.workspace }}
+
+      popd
+    shell: bash

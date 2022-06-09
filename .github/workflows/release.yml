@@ -1,0 +1,106 @@
+name: build cypher miner release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+  # workflow_dispatch:
+  #     inputs:
+  #       logLevel:
+  #         description: 'Log level'
+  #         required: true
+  #         default: 'warning'
+  #       tags:
+  #         description: 'Test scenario tags'
+
+jobs:
+  validate-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        uses: ./.github/actions/get-version
+
+      - name: Verify AssemblyVersion miner
+        run: ./.github/actions/get-version/validate.sh ./miner/miner.csproj ${{ env.VERSION }}
+        shell: bash
+
+
+  build-linux-macos:
+    needs: validate-version
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_MINER_TELEMETRY_OPTOUT: true
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        uses: ./.github/actions/get-version
+
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Prepare Linux build environment
+        uses: ./.github/actions/build-env-prepare-linux
+
+      - name: Create linux-x64 package
+        uses: ./.github/actions/build-tar-gz
+        with:
+          runtime: 'linux-x64'
+
+      - name: Create linux-arm package
+        uses: ./.github/actions/build-tar-gz
+        with:
+          runtime: 'linux-arm'
+
+      - name: Create linux-arm64 package
+        uses: ./.github/actions/build-tar-gz
+        with:
+          runtime: 'linux-arm64'
+
+      - name: Create osx-x64 package
+        uses: ./.github/actions/build-tar-gz
+        with:
+          runtime: 'osx-x64'
+
+      - name: Create releases
+        id: gh-release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: cypher-miner_${{ env.VERSION }}*.*
+
+  build-windows:
+    needs: validate-version
+    runs-on: windows-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_MINER_TELEMETRY_OPTOUT: true
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: get_version
+        uses: ./.github/actions/get-version
+
+      - name: Create Windows release
+        id: gh-release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: cypher-miner_${{ env.VERSION }}*.*

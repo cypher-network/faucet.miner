@@ -7,6 +7,7 @@
         <TrimMode>copyused</TrimMode>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <RootNamespace>Miner</RootNamespace>
+        <AssemblyVersion>0.0.2.0</AssemblyVersion>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="Models\" />
