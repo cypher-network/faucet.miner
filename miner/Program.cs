@@ -15,9 +15,10 @@ static class Program
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
+    [Obsolete]
     public static void Main(string[] args) => BuildAvaloniaApp()
             .Start<MainWindow>(() => new MainWindowViewModel());
-    
+
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
@@ -30,12 +31,12 @@ static class Program
                 retainedFileCountLimit: 7,
                 rollOnFileSizeLimit: true)
             .CreateLogger();
-        
+
         Locator.CurrentMutable.RegisterConstant(Log.Logger);
         Locator.CurrentMutable.RegisterConstant<ISessionService>(new SessionService());
         Locator.CurrentMutable.Register<IBlockchain>(() =>
             new Blockchain(Locator.Current.GetService<ISessionService>()));
-        
+
         return AppBuilder.Configure<App>()
             .UseReactiveUI()
             .UsePlatformDetect()

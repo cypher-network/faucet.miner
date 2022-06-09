@@ -21,7 +21,7 @@ public interface IConnectionService
     IObservable<int> CountDownReceived { get; }
     IObservable<byte[]> RewardReceived { get; }
     ObservableCollection<BlockMiner> Blocks { get; }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -32,7 +32,7 @@ public interface IConnectionService
     /// </summary>
     /// <returns></returns>
     Task DisconnectAsync();
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -69,7 +69,7 @@ public class ConnectionService : IConnectionService
     /// <param name="hubUrl"></param>
     public ConnectionService(string hubUrl)
     {
-        _hubConnection =  new HubConnectionBuilder().WithUrl($"{hubUrl}").Build();
+        _hubConnection = new HubConnectionBuilder().WithUrl($"{hubUrl}").Build();
         _hubConnection.On<BlockMiner>("NewBlock", ProcessNewBlock);
         _hubConnection.On<int>("CountDown", ProcessCountDown);
         _hubConnection.On<byte[]>("Reward", ProcessReward);
@@ -80,7 +80,7 @@ public class ConnectionService : IConnectionService
             .Select(x => _hubConnection.State)
             .DistinctUntilChanged();
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -105,7 +105,7 @@ public class ConnectionService : IConnectionService
     {
         return await _hubConnection.InvokeAsync<byte[]>("PublicKey");
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -114,7 +114,7 @@ public class ConnectionService : IConnectionService
     {
         await _hubConnection.SendAsync("BlockProof", proof);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>

@@ -56,6 +56,8 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
   ARCHITECTURE_ARM64=("aarch64")
   ARCHITECTURE_X64=("x86_64")
 
+  # shellcheck disable=SC2076
+  # shellcheck disable=SC2199
   if [[ " ${ARCHITECTURE_ARM[@]} " =~ " ${ARCHITECTURE} " ]]; then
     ARCHITECTURE_UNIFIED="linux-arm"
 

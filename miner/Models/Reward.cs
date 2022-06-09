@@ -6,4 +6,4 @@ using MessagePack;
 namespace Miner.Models;
 
 [MessagePackObject]
-public record Reward([property: Key(0)] byte[] TxId, [property:Key(1)] int Amount);
+public record Reward([property: Key(0)] byte[] TxId, [property: Key(1)] int Amount);

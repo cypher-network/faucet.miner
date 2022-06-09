@@ -19,7 +19,7 @@ public static class Utils
     {
         return Convert.FromHexString(hex.ToString()!);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -29,7 +29,7 @@ public static class Utils
     {
         return Convert.ToHexString(data);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -43,7 +43,7 @@ public static class Utils
 
         return result;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -53,7 +53,7 @@ public static class Utils
     {
         return Encoding.UTF8.GetBytes(value ?? string.Empty, 0, value!.Length);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -63,7 +63,7 @@ public static class Utils
     {
         return Encoding.UTF8.GetBytes(value.ToString(), 0, value!.ToString().Length);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -72,7 +72,7 @@ public static class Utils
     {
         return DateTime.UtcNow;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -89,7 +89,7 @@ public static class Utils
     {
         return new DateTimeOffset(GetAdjustedTime()).ToUnixTimeSeconds();
     }
-    
+
     /// <summary>
     /// 
     /// </summary>

@@ -26,7 +26,7 @@ public interface ISessionService
 public class SessionService : ISessionService
 {
     private readonly string _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "keypair.file");
-    
+
     public KeyPair KeyPair { get; private set; }
     public byte[] Address { get; set; }
     public byte[] RemotePublicKey { get; set; }
@@ -48,9 +48,9 @@ public class SessionService : ISessionService
 
         if (!File.Exists(_filePath))
         {
-            SaveKeyPair();   
+            SaveKeyPair();
         }
-        
+
         _filePath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
         try
         {

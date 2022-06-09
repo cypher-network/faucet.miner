@@ -8,7 +8,7 @@ namespace Miner.Models;
 [MessagePackObject]
 public record BlockMiner
 {
-    [Key(0)] public byte[] Hash { get; init; }
-    [Key(1)] public byte[] PrevHash { get; init; }
+    [Key(0)] public byte[]? Hash { get; init; }
+    [Key(1)] public byte[]? PrevHash { get; init; }
     [Key(2)] public ulong Height { get; init; }
 }

@@ -16,7 +16,7 @@ namespace Miner
         {
             AvaloniaXamlLoader.Load(this);
         }
-        
+
         public override void OnFrameworkInitializationCompleted()
         {
             // Create the AutoSuspendHelper.
@@ -24,7 +24,7 @@ namespace Miner
             RxApp.SuspensionHost.CreateNewAppState = () => new MainWindowViewModel();
             RxApp.SuspensionHost.SetupDefaultSuspendResume(new NewtonsoftJsonSuspensionDriver("appstate.json"));
             suspension.OnFrameworkInitializationCompleted();
-            
+
             Locator.CurrentMutable.RegisterConstant<IScreen>(RxApp.SuspensionHost.GetAppState<MainWindowViewModel>());
             Locator.CurrentMutable.UseSerilogFullLogger();
             Locator.CurrentMutable.Register<IViewFor<MinerViewModel>>(() => new MinerView());
