@@ -17,15 +17,15 @@ using Splat;
 
 namespace Miner.ViewModels;
 
-public class MinerViewModel: ViewModelBase
+public class MinerViewModel : ViewModelBase
 {
     private readonly IConnectionService _connectionService;
     private readonly ISessionService _sessionService;
     private readonly IBlockchain _blockchain;
-    
+
     public string Greeting => "Welcome to $Miner ♥";
     public ICommand StartCommand { get; }
-        
+
     /// <summary>
     /// 
     /// </summary>
@@ -35,7 +35,7 @@ public class MinerViewModel: ViewModelBase
         get => _address;
         set => this.RaiseAndSetIfChanged(ref _address, value);
     }
-        
+
     /// <summary>
     /// 
     /// </summary>
@@ -85,7 +85,7 @@ public class MinerViewModel: ViewModelBase
         get => _startCommandContent;
         set => this.RaiseAndSetIfChanged(ref _startCommandContent, value);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -110,7 +110,7 @@ public class MinerViewModel: ViewModelBase
         StartCommandContent = "Start Miner";
         CountDown = "Wait..";
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -121,14 +121,14 @@ public class MinerViewModel: ViewModelBase
             await _connectionService.DisconnectAsync();
             return;
         }
-        
+
         if (!IsBase58(Address))
         {
             this.Log().Error("Recipient address does not phrase to a base58 format.");
             Address = string.Empty;
             return;
         }
-        
+
         await Connect();
     }
 
@@ -148,7 +148,7 @@ public class MinerViewModel: ViewModelBase
                     StartCommandContent = "Start Miner";
                     return;
                 }
-                
+
                 StartCommandContent = "Stop Miner";
                 _sessionService.Address = Address.ToBytes();
                 _sessionService.RemotePublicKey = AsyncHelper.RunSync(_connectionService.GetRemotePublicKey);
@@ -180,7 +180,7 @@ public class MinerViewModel: ViewModelBase
             this.Log().Error("Something bad happened: {0}", ex.Message);
         }
     }
-    
+
     /// <summary>
     /// 
     /// </summary>

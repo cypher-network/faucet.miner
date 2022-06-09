@@ -24,7 +24,7 @@ public static class Crypto
         var calculateVrfSignature = Curve.calculateVrfSignature(ecPrivateKey, msg);
         return calculateVrfSignature;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -37,7 +37,7 @@ public static class Crypto
         var vrfSignature = Curve.verifyVrfSignature(ecPublicKey, msg, sig);
         return vrfSignature;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -66,7 +66,7 @@ public static class Crypto
             ? Array.Empty<byte>()
             : cipher;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>

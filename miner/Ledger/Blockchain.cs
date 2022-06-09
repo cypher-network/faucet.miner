@@ -29,7 +29,7 @@ public interface IBlockchain
     /// <param name="block"></param>
     /// <returns></returns>
     Task<BlockMinerProof?> NewProof(BlockMiner block);
-    
+
     bool Busy { get; }
 }
 
@@ -41,12 +41,12 @@ public class Blockchain : IBlockchain, IDisposable
     private const int LockTimeInMilliseconds = 10000;
     private const int StopSolutionInMilliseconds = 10000;
     private const int StopSlothInMilliseconds = 10000;
-    
+
     private readonly CancellationTokenSource _cancellation = new();
     private readonly ISessionService _sessionService;
 
     public bool Busy { get; private set; }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -55,7 +55,7 @@ public class Blockchain : IBlockchain, IDisposable
     {
         _sessionService = sessionService;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -95,7 +95,7 @@ public class Blockchain : IBlockchain, IDisposable
         {
             Busy = false;
         }
-        
+
         return blockMinerProof;
     }
 
@@ -110,7 +110,7 @@ public class Blockchain : IBlockchain, IDisposable
         diff = diff == 0 ? 1 : diff;
         return (int)diff;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -137,7 +137,7 @@ public class Blockchain : IBlockchain, IDisposable
                         itr = 0;
                         break;
                     }
-                    
+
                     var weightedTarget = target.Multiply(BigInteger.ValueOf(itr));
                     if (hashWeightedTarget.CompareTo(weightedTarget) <= 0)
                     {
@@ -183,7 +183,7 @@ public class Blockchain : IBlockchain, IDisposable
         var kernel = Hasher.Hash(txHashBig.ToByteArray()).HexToByte();
         return kernel;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -192,7 +192,7 @@ public class Blockchain : IBlockchain, IDisposable
     /// <returns></returns>
     private async Task<byte[]> GetNonceAsync(byte[] vrfSignature, int bits)
     {
-        var x =  System.Numerics.BigInteger.Parse(vrfSignature.ByteToHex(), NumberStyles.AllowHexSpecifier);
+        var x = System.Numerics.BigInteger.Parse(vrfSignature.ByteToHex(), NumberStyles.AllowHexSpecifier);
         if (x.Sign <= 0) x = -x;
         var nonceHash = Array.Empty<byte>();
         try

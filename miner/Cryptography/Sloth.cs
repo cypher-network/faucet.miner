@@ -19,7 +19,7 @@ public class Sloth
 
     private readonly int _runForMs;
     private readonly CancellationToken _stoppingToken;
-    
+
     /// <summary>
     /// </summary>
     /// <param name="runForMs"></param>
