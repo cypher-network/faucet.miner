@@ -9,6 +9,7 @@
 /bin
 /obj
 .DS_Store
+miner/appstate.json
 
 **/appsettings.Development.json
 **/snapshot
