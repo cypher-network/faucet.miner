@@ -30,7 +30,7 @@ Uninstall wallet
 For example:
 
 ```shell
-bash <(curl -sSL https://raw.githubusercontent.com/cypher-network/faucet.miner/main/miner/Install/install.sh)) --uninstall
+bash <(curl -sSL https://raw.githubusercontent.com/cypher-network/faucet.miner/main/miner/Install/install.sh) --uninstall
 ```
 
 ### Microsoft Windows
