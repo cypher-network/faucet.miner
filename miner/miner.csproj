@@ -48,7 +48,7 @@
 
     <Target Name="UpdatePublishDir" AfterTargets="Build">
      <PropertyGroup>
-       <PublishDir>$(OutputPath)dist</PublishDir>
+       <PublishDir>$(OutputPath)</PublishDir>
      </PropertyGroup>
    </Target>
 	
@@ -58,6 +58,6 @@
       <ZipOutputPath>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(ZipFileName)</ZipOutputPath>
     </PropertyGroup>
     <Exec Condition="$(OS) == 'Windows_NT'" Command="powershell -NoLogo -Command &quot;&amp; Compress-Archive -Path $(MSBuildThisFileDirectory)$(PublishDir) -DestinationPath $(ZipOutputPath) -Force&quot;" />
-    <!--<Exec Condition="$(OS) != 'Windows_NT'" Command="cd $(MSBuildThisFileDirectory)$(OutputPath) &amp;&amp; zip -r $(ZipOutputPath) dist &amp;&amp; cd -" /> -->
+    <Exec Condition="$(OS) != 'Windows_NT'" Command="cd $(MSBuildThisFileDirectory)$(OutputPath) &amp;&amp; zip -r $(ZipOutputPath) $(MSBuildThisFileDirectory)$(OutputPath) &amp;&amp; cd -" />
   </Target>
 </Project>
