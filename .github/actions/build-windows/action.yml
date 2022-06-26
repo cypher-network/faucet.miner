@@ -12,7 +12,7 @@ runs:
    working-directory: publish/miner/${{ inputs.runtime }}
    run: |
    
-      zip -r miner${{ env.VERSION }}.zip ${{ github.workspace }}
+      zip -r "miner${{ env.VERSION }}.zip" *
       
       cp miner${{ env.VERSION }}.zip ${{ github.workspace }}
       
