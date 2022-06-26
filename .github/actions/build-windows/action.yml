@@ -9,7 +9,5 @@ runs:
     shell: powershell
     
  - name: Package zip
-     working-directory: publish/miner/${{ inputs.runtime }}
-     run: |
-     run: Compress-Archive -LiteralPath ./ -DestinationPath ${{ github.workspace }}cypher-miner_${{ env.VERSION }}.zip
+     run: Compress-Archive -LiteralPath publish/miner/${{ inputs.runtime }} -DestinationPath ${{ github.workspace }}/cypher-miner_${{ env.VERSION }}.zip
      shell: powershell
