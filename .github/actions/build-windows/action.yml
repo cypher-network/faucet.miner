@@ -7,18 +7,3 @@ runs:
   - name: Build miner
     run: dotnet publish miner --configuration Release --self-contained -r win-x64 -p:PublishReadyToRun=true --output publish/miner/${{ inputs.runtime }}
     shell: powershell
- 
-  - name: Package zip
-    run: |
-    
-      sudo apt-get install -y zip
-      
-      pushd publish/miner/${{ inputs.runtime }}/
-      zip -r "cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip" *
-      sha256sum cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip > cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip.sha256
-        
-      mv cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip        ${{ github.workspace }}
-      mv cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip.sha256 ${{ github.workspace }}
-      
-      popd
-    shell: bash
