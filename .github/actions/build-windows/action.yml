@@ -10,7 +10,7 @@ runs:
  
  - name: Package zip
    working-directory: publish/miner/${{ inputs.runtime }}
-   run: zip -r miner${{ env.VERSION }}.zip *
+   run: zip -r miner${{ env.VERSION }} *.*
    shell: powershell
    
 - name: Copy artifacts
