@@ -10,6 +10,5 @@ runs:
  
   - name: Package zip
     working-directory: publish/miner/${{ inputs.runtime }}
-    run: |
-      zip -r cypher-miner_${{ env.VERSION }} *.* ${{ github.workspace }} &amp;&amp; cd -
+    run: zip -r cypher-miner_${{ env.VERSION }} *.* ${{ github.workspace }}
     shell: powershell
