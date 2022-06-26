@@ -8,12 +8,9 @@ runs:
     run: dotnet publish miner --configuration Release --self-contained -r win-x64 -p:PublishReadyToRun=true --output publish/miner/${{ inputs.runtime }}
     shell: powershell
  
- - name: Package zip
-   working-directory: publish/miner/${{ inputs.runtime }}
-   run: zip -r miner_${{ env.VERSION }} *.*
-   shell: powershell
-   
-- name: Copy artifacts
-  working-directory: publish/miner/${{ inputs.runtime }}
-  run: move-item miner_${{ env.VERSION }}.zip ${{ github.workspace }}
-  shell: powershell
+  - name: Package zip
+    working-directory: publish/miner/${{ inputs.runtime }}
+    run: |
+      zip -r miner_${{ env.VERSION }} *.*
+      move-item miner_${{ env.VERSION }}.zip ${{ github.workspace }}
+    shell: powershell
