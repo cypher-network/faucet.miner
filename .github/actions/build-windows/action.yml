@@ -14,5 +14,6 @@ runs:
    shell: powershell
    
 - name: Copy artifacts
+    working-directory: publish/miner/${{ inputs.runtime }}
     run: move-item miner${{ env.VERSION }}.zip ${{ github.workspace }}
     shell: powershell
