@@ -79,7 +79,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: miner${{ env.VERSION }}*.*
+          files: cypher-miner_${{ env.VERSION }}*.*
 
   build-windows:
     needs: validate-version
@@ -106,4 +106,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: miner${{ env.VERSION }}*.*
+          files: cypher-miner_${{ env.VERSION }}*.*
