@@ -10,6 +10,9 @@ runs:
  
   - name: Package zip
     run: |
+    
+      sudo apt-get install -y zip
+      
       pushd publish/miner/${{ inputs.runtime }}/
       zip -r "cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip" *
       sha256sum cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip > cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip.sha256
