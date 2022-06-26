@@ -10,5 +10,10 @@ runs:
  
  - name: Package zip
    working-directory: publish/miner/${{ inputs.runtime }}
-   run: zip -r miner${{ env.VERSION }}.zip ${{ github.workspace }}
+   run: |
+   
+      zip -r miner${{ env.VERSION }}.zip ${{ github.workspace }}
+      
+      cp miner${{ env.VERSION }}.zip ${{ github.workspace }}
+      
    shell: powershell
