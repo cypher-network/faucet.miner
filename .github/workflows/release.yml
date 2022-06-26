@@ -79,7 +79,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: cypher-miner_${{ env.VERSION }}*.*
+          files: miner${{ env.VERSION }}*.*
 
   build-windows:
     needs: validate-version
@@ -97,10 +97,13 @@ jobs:
         id: get_version
         uses: ./.github/actions/get-version
 
+      - name: Create windows installer
+        uses: ./.github/actions/build-windows
+
       - name: Create Windows release
         id: gh-release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: cypher-miner_${{ env.VERSION }}*.*
+          files: miner${{ env.VERSION }}*.*
