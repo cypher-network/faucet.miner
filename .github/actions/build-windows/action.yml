@@ -9,6 +9,13 @@ runs:
     shell: powershell
  
   - name: Package zip
-    working-directory: publish/miner/${{ inputs.runtime }}
-    run: zip -r cypher-miner_${{ env.VERSION }}.zip . ${{ github.workspace }}
-    shell: powershell
+    run: |
+      pushd publish/miner/${{ inputs.runtime }}/
+      zip -r "cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip" *
+      sha256sum cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip > cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip.sha256
+        
+      mv cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip        ${{ github.workspace }}
+      mv cypher-miner_${{ env.VERSION }}_${{ inputs.runtime }}.zip.sha256 ${{ github.workspace }}
+      
+      popd
+    shell: bash
