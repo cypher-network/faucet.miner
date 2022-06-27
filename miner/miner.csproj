@@ -7,7 +7,7 @@
         <TrimMode>copyused</TrimMode>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <RootNamespace>Miner</RootNamespace>
-        <AssemblyVersion>0.0.5.1</AssemblyVersion>
+        <AssemblyVersion>0.0.6.0</AssemblyVersion>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="Models\" />
@@ -44,18 +44,5 @@
       <Content Include="appsettings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-    </ItemGroup>
-    <Target Name="UpdatePublishDir" AfterTargets="Build">
-     <PropertyGroup>
-       <PublishDir>$(OutputPath)</PublishDir>
-     </PropertyGroup>
-   </Target>
-	
-   <Target Name="CreateReleaseZip" AfterTargets="Publish">
-    <PropertyGroup>
-      <ZipFileName>$(AssemblyTitle.ToLowerInvariant()).v$(AssemblyVersion).zip</ZipFileName>
-      <ZipOutputPath>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(ZipFileName)</ZipOutputPath>
-    </PropertyGroup>
-    <Exec Condition="$(OS) == 'Windows_NT'" Command="powershell -NoLogo -Command &quot;&amp; Compress-Archive -Path $(MSBuildThisFileDirectory)$(PublishDir) -DestinationPath $(ZipOutputPath) -Force&quot;" />
-  </Target>
+    </ItemGroup>   
 </Project>

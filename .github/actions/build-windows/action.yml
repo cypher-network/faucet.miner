@@ -7,3 +7,8 @@ runs:
   - name: Build miner
     run: dotnet publish miner --configuration Release --self-contained -r win-x64 -p:PublishReadyToRun=true --output publish/miner/${{ inputs.runtime }}
     shell: powershell
+    
+  - name: Package zip
+    run: |
+      Compress-Archive -Path publish/miner/${{ inputs.runtime }} -DestinationPath ${{ github.workspace }}/cypher-miner_${{ env.VERSION }}.zip -Force
+    shell: powershell
