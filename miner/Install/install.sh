@@ -300,7 +300,7 @@ if [ "${IS_UNINSTALL}" = true ]; then
   sudo rm -rf "${CYPHER_MINER_OPT_PATH}"
   sudo rm -f "${CYPHER_MINER_SYMLINK_PATH}${CYPHER_MINER_EXECUTABLE}"
 
-  printf "\n\n  %b Uninstall succesful\n\n" "${DONE}"
+  printf "\n\n  %b Uninstall successful\n\n" "${DONE}"
 
 else
   install_info
