@@ -69,7 +69,7 @@ public class ConnectionService : IConnectionService
     /// <param name="hubUrl"></param>
     public ConnectionService(string hubUrl)
     {
-        _hubConnection = new HubConnectionBuilder().WithUrl($"{hubUrl}").Build();
+        _hubConnection = new HubConnectionBuilder().WithAutomaticReconnect().WithUrl($"{hubUrl}").Build();
         _hubConnection.On<BlockMiner>("NewBlock", ProcessNewBlock);
         _hubConnection.On<int>("CountDown", ProcessCountDown);
         _hubConnection.On<byte[]>("Reward", ProcessReward);

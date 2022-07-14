@@ -5,6 +5,8 @@ using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Controls;
+using Avalonia.Threading;
 using Miner.Cryptography;
 using Miner.Helper;
 using Miner.Ledger;
@@ -34,6 +36,13 @@ public class MinerViewModel : ViewModelBase
     {
         get => _address;
         set => this.RaiseAndSetIfChanged(ref _address, value);
+    }
+
+    private string _hashRate;
+    public string HashRate
+    {
+        get => _hashRate;
+        set => this.RaiseAndSetIfChanged(ref _hashRate, value);
     }
 
     /// <summary>
@@ -108,7 +117,7 @@ public class MinerViewModel : ViewModelBase
         });
 
         StartCommandContent = "Start Miner";
-        CountDown = "Wait..";
+        CountDown = "...";
     }
 
     /// <summary>
@@ -152,20 +161,21 @@ public class MinerViewModel : ViewModelBase
                 StartCommandContent = "Stop Miner";
                 _sessionService.Address = Address.ToBytes();
                 _sessionService.RemotePublicKey = AsyncHelper.RunSync(_connectionService.GetRemotePublicKey);
-                _connectionService.BlockReceived.Subscribe(block =>
+                _connectionService.BlockReceived.Subscribe(async block =>
                 {
                     if (!_blockchain.Busy)
                     {
-                        Task.Run(async () =>
-                        {
-                            var blockProof = await _blockchain.NewProof(block);
-                            if (blockProof is null) return;
-                            var proof = Crypto.BoxSeal(MessagePack.MessagePackSerializer.Serialize(blockProof),
-                                _sessionService.RemotePublicKey);
-                            await _connectionService.SendBlockProofAsync(proof);
-                            CountDown = "Proof sent!";
-                            SentProofCount++;
-                        });
+                        // Message is to fast to see..
+                        CountDown = "Hashing...";
+                        var blockProof = await Task.Run(async () => await _blockchain.NewProof(block));
+                        if (blockProof is null) return;
+
+                        HashRate = $"Hash Rate: {blockProof.HashRate} PS";
+                        var proof = Crypto.BoxSeal(MessagePack.MessagePackSerializer.Serialize(blockProof),
+                            _sessionService.RemotePublicKey);
+                        await _connectionService.SendBlockProofAsync(proof);
+                        CountDown = "Proof sent!";
+                        SentProofCount++;
                     }
                     else
                     {

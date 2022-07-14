@@ -74,8 +74,8 @@ public class Blockchain : IBlockchain, IDisposable
             var verifyVrfSignature = Crypto.GetVerifyVrfSignature(
                 Curve.decodePoint(_sessionService.KeyPair.PublicKey, 0), kernel, calculatedVrfSignature);
             var solution = await SolutionAsync(calculatedVrfSignature, kernel);
-            if (solution == 0) return null;
-            var nonce = await GetNonceAsync(verifyVrfSignature, Bits(solution));
+            if (solution.Sol == 0) return null;
+            var nonce = await GetNonceAsync(verifyVrfSignature, Bits(solution.Sol));
             if (nonce.Length == 0) return null;
             blockMinerProof = new BlockMinerProof
             {
@@ -83,12 +83,13 @@ public class Blockchain : IBlockchain, IDisposable
                 Height = block.Height,
                 Locktime = lockTime,
                 Nonce = nonce,
-                Solution = solution,
+                Solution = solution.Sol,
                 LocktimeScript = new Script(Op.GetPushOp(lockTime), OpcodeType.OP_CHECKLOCKTIMEVERIFY).ToString()
                     .ToBytes(),
                 PublicKey = _sessionService.KeyPair.PublicKey,
                 VrfProof = calculatedVrfSignature,
-                VrfSig = verifyVrfSignature
+                VrfSig = verifyVrfSignature,
+                HashRate = solution.HashRatePerSecond
             };
         }
         finally
@@ -117,11 +118,12 @@ public class Blockchain : IBlockchain, IDisposable
     /// <param name="vrfBytes"></param>
     /// <param name="kernel"></param>
     /// <returns></returns>
-    private static async Task<ulong> SolutionAsync(byte[] vrfBytes, byte[] kernel)
+    private static async Task<Solution> SolutionAsync(byte[] vrfBytes, byte[] kernel)
     {
         return await Task.Factory.StartNew(() =>
         {
             var sw = new Stopwatch();
+            var sol = new Solution();
             try
             {
                 long itr = 0;
@@ -141,6 +143,7 @@ public class Blockchain : IBlockchain, IDisposable
                     var weightedTarget = target.Multiply(BigInteger.ValueOf(itr));
                     if (hashWeightedTarget.CompareTo(weightedTarget) <= 0)
                     {
+                        sw.Stop();
                         break;
                     }
 
@@ -153,18 +156,19 @@ public class Blockchain : IBlockchain, IDisposable
                     itr++;
                 }
 
-                return (ulong)itr;
+                if (sw.IsRunning) sw.Stop();
+                sol.Sol = (ulong)itr;
+                if (sol.Sol == 0) return sol;
+                var seconds = sw.ElapsedMilliseconds * 10 ^ -3;
+                sol.HashRatePerSecond = seconds < 0 ? (long)sol.Sol : (long)(sol.Sol / (ulong)seconds);
+                return sol;
             }
             catch (Exception)
-            {
-                // Ignore
-            }
-            finally
             {
                 sw.Stop();
             }
 
-            return 0ul;
+            return sol;
         }, TaskCreationOptions.LongRunning).ConfigureAwait(false);
     }
 

@@ -7,12 +7,13 @@ $latestRelease = Invoke-WebRequest "https://api.github.com/repos/cypher-network/
 ConvertFrom-Json |
 Select-Object tag_name
 $tag_name =  $latestRelease.tag_name
+$version = $tag_name.Replace("v","")
 
 # Download the zip
 Write-Host "Downloading latest version ($tag_name)"
 $client = New-Object "System.Net.WebClient"
-$url = "https://github.com/cypher-network/faucet.miner/releases/download/$tag_name/miner.$tag_name.zip"
-$zipFile = Join-Path $tempFolder "miner.zip"
+$url = "https://github.com/cypher-network/faucet.miner/releases/download/$tag_name/cypher-miner_$version.zip"
+$zipFile = Join-Path $tempFolder "cypher-miner_$version.zip"
 $client.DownloadFile($url,$zipFile)
 
 $installationFolder = Join-Path $env:USERPROFILE ".cyphernetworkminer"
