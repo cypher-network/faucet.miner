@@ -128,7 +128,7 @@ public class ConnectionService : IConnectionService
             // Ignore
         }
     }
-    
+
     /// <summary>
     /// 
     /// </summary>

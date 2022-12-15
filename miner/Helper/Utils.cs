@@ -11,7 +11,7 @@ namespace Miner.Helper;
 public static class Utils
 {
     public const int Coin = 1000_000_000;
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -111,7 +111,7 @@ public static class Utils
     {
         return Assembly.GetExecutingAssembly().GetName().Version.ToString();
     }
-    
+
     /// <summary>
     /// 
     /// </summary>

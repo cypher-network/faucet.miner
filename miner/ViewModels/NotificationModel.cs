@@ -3,7 +3,7 @@ using Avalonia.Controls.Notifications;
 
 namespace Miner.ViewModels;
 
-public class NotificationModel: INotification
+public class NotificationModel : INotification
 {
 
     public string Title { get; set; }
@@ -14,5 +14,5 @@ public class NotificationModel: INotification
     public TimeSpan Expiration { get; set; }
     public Action OnClick { get; }
     public Action OnClose { get; }
-    
+
 }

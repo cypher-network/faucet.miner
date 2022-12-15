@@ -13,8 +13,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         this.WhenActivated(disposables => { });
         AvaloniaXamlLoader.Load(this);
-        
-         _notificationManager = new WindowNotificationManager(this)
+
+        _notificationManager = new WindowNotificationManager(this)
         {
             Position = NotificationPosition.TopRight,
             MaxItems = 2

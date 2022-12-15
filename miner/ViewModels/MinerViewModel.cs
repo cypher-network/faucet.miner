@@ -28,10 +28,10 @@ public class MinerViewModel : ViewModelBase
     private readonly IBlockchain _blockchain;
 
     public string Greeting => $"$Miner ♥ v{Utils.GetAssemblyVersion()}";
-    
+
     public ICommand StartCommand { get; }
     public ICommand PkCommand { get; }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -160,7 +160,7 @@ public class MinerViewModel : ViewModelBase
     /// <summary>
     /// 
     /// </summary>
-    private async  Task ShowPublicKey()
+    private async Task ShowPublicKey()
     {
         var pk = _sessionService.KeyPair.PublicKey.ByteToHex();
         var clipboard = (IClipboard)AvaloniaLocator.Current.GetService(typeof(IClipboard));
@@ -187,7 +187,7 @@ public class MinerViewModel : ViewModelBase
 
                 StartCommandContent = "Stop Miner";
                 _sessionService.Address = Address.ToBytes();
-                
+
                 Reward = AsyncHelper.RunSync(async delegate
                 {
                     var pubKey = _sessionService.KeyPair.PublicKey;
@@ -198,7 +198,7 @@ public class MinerViewModel : ViewModelBase
                     Reward = result.Amount.DivCoin();
                     return Reward;
                 });
-                
+
                 _sessionService.RemotePublicKey = AsyncHelper.RunSync(_connectionService.GetRemotePublicKey);
                 _connectionService.BlockReceived.Subscribe(async block =>
                 {
@@ -212,7 +212,7 @@ public class MinerViewModel : ViewModelBase
                         HashRate = $"Hash Rate: {blockProof.HashRate} PS";
                         var proof = Crypto.BoxSeal(MessagePack.MessagePackSerializer.Serialize(blockProof),
                             _sessionService.RemotePublicKey);
-                        
+
                         await _connectionService.SendBlockProofAsync(proof);
                         CountDown = "Proof sent!";
                         SentProofCount++;
