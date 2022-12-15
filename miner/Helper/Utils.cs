@@ -10,6 +10,8 @@ namespace Miner.Helper;
 /// </summary>
 public static class Utils
 {
+    public const int Coin = 1000_000_000;
+
     /// <summary>
     /// 
     /// </summary>
@@ -108,5 +110,15 @@ public static class Utils
     public static string GetAssemblyVersion()
     {
         return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static decimal DivCoin(this ulong value)
+    {
+        return Convert.ToDecimal(value) / Coin; ;
     }
 }

@@ -5,14 +5,16 @@ using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia.Controls;
-using Avalonia.Threading;
+using Avalonia;
+using Avalonia.Controls.Notifications;
+using Avalonia.Input.Platform;
 using Miner.Cryptography;
 using Miner.Helper;
 using Miner.Ledger;
 using Miner.Models;
 using Miner.Services;
 using Microsoft.AspNetCore.SignalR.Client;
+using Miner.Views;
 using NBitcoin.DataEncoders;
 using ReactiveUI;
 using Splat;
@@ -26,7 +28,9 @@ public class MinerViewModel : ViewModelBase
     private readonly IBlockchain _blockchain;
 
     public string Greeting => $"$Miner ♥ v{Utils.GetAssemblyVersion()}";
+
     public ICommand StartCommand { get; }
+    public ICommand PkCommand { get; }
 
     /// <summary>
     /// 
@@ -58,8 +62,8 @@ public class MinerViewModel : ViewModelBase
     /// <summary>
     /// 
     /// </summary>
-    private int _reward;
-    public int Reward
+    private decimal _reward;
+    public decimal Reward
     {
         get => _reward;
         set => this.RaiseAndSetIfChanged(ref _reward, value);
@@ -85,6 +89,13 @@ public class MinerViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _sentProofCount, value);
     }
 
+    private int _wonProofCount;
+    public int WonProofCount
+    {
+        get => _wonProofCount;
+        set => this.RaiseAndSetIfChanged(ref _wonProofCount, value);
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -105,6 +116,8 @@ public class MinerViewModel : ViewModelBase
         _blockchain = Locator.Current.GetService<IBlockchain>();
         _connectionService = new ConnectionService(_sessionService.HttpHub);
         var canSendMessage = this.WhenAnyValue(x => x.Address).Select(x => !string.IsNullOrEmpty(x));
+        var canShowPkMessage = this.WhenAnyValue(x => x._sessionService.KeyPair.PublicKey).Select(x => !string.IsNullOrEmpty(x.ByteToHex()));
+        PkCommand = ReactiveCommand.CreateFromTask(ShowPublicKey, canShowPkMessage);
         StartCommand = ReactiveCommand.CreateFromTask(Start, canSendMessage);
         _connectionService.CountDownReceived.Subscribe(countdown => { CountDown = $"{countdown}s"; });
         _connectionService.RewardReceived.Subscribe(reward =>
@@ -113,7 +126,8 @@ public class MinerViewModel : ViewModelBase
                 _sessionService.KeyPair.PublicKey[1..33]);
             if (msg.Length == 0) return;
             var result = MessagePack.MessagePackSerializer.Deserialize<Reward>(msg);
-            Reward += result.Amount;
+            Reward += result.Amount.DivCoin();
+            WonProofCount += 1;
         });
 
         StartCommandContent = "Start Miner";
@@ -133,12 +147,25 @@ public class MinerViewModel : ViewModelBase
 
         if (!IsBase58(Address))
         {
-            this.Log().Error("Recipient address does not phrase to a base58 format.");
+            const string err = "Recipient address does not phrase to a base58 format.";
+            MainWindow.ShowNotification("Main-net Address", err, NotificationType.Error);
             Address = string.Empty;
+            this.Log().Error(err);
             return;
         }
 
         await Connect();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private async Task ShowPublicKey()
+    {
+        var pk = _sessionService.KeyPair.PublicKey.ByteToHex();
+        var clipboard = (IClipboard)AvaloniaLocator.Current.GetService(typeof(IClipboard));
+        await clipboard.SetTextAsync(pk);
+        MainWindow.ShowNotification("Public Key", $"{pk}\n\n Copied to clipboard!", NotificationType.Success);
     }
 
     /// <summary>
@@ -160,26 +187,38 @@ public class MinerViewModel : ViewModelBase
 
                 StartCommandContent = "Stop Miner";
                 _sessionService.Address = Address.ToBytes();
+
+                Reward = AsyncHelper.RunSync(async delegate
+                {
+                    var pubKey = _sessionService.KeyPair.PublicKey;
+                    var cipher = await _connectionService.GetRewardUpdateRequest(pubKey);
+                    var msg = Crypto.BoxSealOpen(cipher, _sessionService.KeyPair.PrivateKey, pubKey[1..33]);
+                    if (msg.Length == 0) return Reward;
+                    var result = MessagePack.MessagePackSerializer.Deserialize<Reward>(msg);
+                    Reward = result.Amount.DivCoin();
+                    return Reward;
+                });
+
                 _sessionService.RemotePublicKey = AsyncHelper.RunSync(_connectionService.GetRemotePublicKey);
                 _connectionService.BlockReceived.Subscribe(async block =>
                 {
+                    CountDown = "New block..";
                     if (!_blockchain.Busy)
                     {
-                        // Message is to fast to see..
                         CountDown = "Hashing...";
-                        var blockProof = await Task.Run(async () => await _blockchain.NewProof(block));
+                        var blockProof = await Task.Run(async () => await _blockchain.NewProof(block)).ConfigureAwait(false);
                         if (blockProof is null) return;
 
                         HashRate = $"Hash Rate: {blockProof.HashRate} PS";
                         var proof = Crypto.BoxSeal(MessagePack.MessagePackSerializer.Serialize(blockProof),
                             _sessionService.RemotePublicKey);
+
                         await _connectionService.SendBlockProofAsync(proof);
                         CountDown = "Proof sent!";
                         SentProofCount++;
                     }
                     else
                     {
-                        // Message is to fast to see..
                         CountDown = "Miner busy...";
                     }
                 });

@@ -79,6 +79,7 @@ public class Blockchain : IBlockchain, IDisposable
             if (nonce.Length == 0) return null;
             blockMinerProof = new BlockMinerProof
             {
+                Hash = block.Hash,
                 Address = _sessionService.Address,
                 Height = block.Height,
                 Locktime = lockTime,

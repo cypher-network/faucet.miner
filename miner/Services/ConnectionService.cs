@@ -45,6 +45,13 @@ public interface IConnectionService
     /// </summary>
     /// <returns></returns>
     Task<byte[]> GetRemotePublicKey();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pubKey"></param>
+    /// <returns></returns>
+    Task<byte[]> GetRewardUpdateRequest(byte[] pubKey);
 }
 
 /// <summary>
@@ -112,7 +119,24 @@ public class ConnectionService : IConnectionService
     /// <param name="proof"></param>
     public async Task SendBlockProofAsync(byte[] proof)
     {
-        await _hubConnection.SendAsync("BlockProof", proof);
+        try
+        {
+            await _hubConnection.SendAsync("BlockProof", proof);
+        }
+        catch (Exception)
+        {
+            // Ignore
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pubKey"></param>
+    /// <returns></returns>
+    public async Task<byte[]> GetRewardUpdateRequest(byte[] pubKey)
+    {
+        return await _hubConnection.InvokeAsync<byte[]>("RewardUpdateRequest", pubKey);
     }
 
     /// <summary>
