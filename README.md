@@ -35,11 +35,9 @@ bash <(curl -sSL https://raw.githubusercontent.com/cypher-network/faucet.miner/m
 
 ### Microsoft Windows
 
-For quick installation on Windows, execute the following command in Powershell:
+For quick installation on Windows, download the zip file cypher-miner_0.0.X.zip:
 
-```powershell
-(new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/cypher-network/faucet.miner/main/miner/Install/install.ps1") | iex
-```
+https://github.com/cypher-network/faucet.miner/releases
 
 ## Contribution
 
