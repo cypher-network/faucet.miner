@@ -62,6 +62,7 @@ public class Blockchain : IBlockchain, IDisposable
     /// <returns></returns>
     public async Task<BlockMinerProof?> NewProof(BlockMiner block)
     {
+        if (block == null) return null;
         BlockMinerProof? blockMinerProof;
         Busy = true;
 
@@ -81,7 +82,6 @@ public class Blockchain : IBlockchain, IDisposable
             {
                 Hash = block.Hash,
                 Address = _sessionService.Address,
-                Height = block.Height,
                 Locktime = lockTime,
                 Nonce = nonce,
                 Solution = solution.Sol,

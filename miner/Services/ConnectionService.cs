@@ -51,7 +51,7 @@ public interface IConnectionService
     /// </summary>
     /// <param name="pubKey"></param>
     /// <returns></returns>
-    Task<byte[]> GetRewardUpdateRequest(byte[] pubKey);
+    Task<byte[]?> GetRewardUpdateRequest(byte[] pubKey);
 }
 
 /// <summary>
@@ -93,7 +93,14 @@ public class ConnectionService : IConnectionService
     /// </summary>
     public async Task ConnectAsync()
     {
-        await _hubConnection.StartAsync();
+        try
+        {
+            await _hubConnection.StartAsync();
+        }
+        catch (Exception)
+        {
+            // Ignore
+        }
     }
 
     /// <summary>
@@ -101,7 +108,14 @@ public class ConnectionService : IConnectionService
     /// </summary>
     public async Task DisconnectAsync()
     {
-        await _hubConnection.StopAsync();
+        try
+        {
+            await _hubConnection.StopAsync();
+        }
+        catch (Exception)
+        {
+            // Ignore
+        }
     }
 
     /// <summary>
@@ -110,7 +124,17 @@ public class ConnectionService : IConnectionService
     /// <returns></returns>
     public async Task<byte[]> GetRemotePublicKey()
     {
-        return await _hubConnection.InvokeAsync<byte[]>("PublicKey");
+        var pubKey = Array.Empty<byte>();
+        try
+        {
+            pubKey = await _hubConnection.InvokeAsync<byte[]>("PublicKey");
+        }
+        catch (Exception)
+        {
+            // Ignore
+        }
+
+        return pubKey;
     }
 
     /// <summary>
@@ -134,9 +158,20 @@ public class ConnectionService : IConnectionService
     /// </summary>
     /// <param name="pubKey"></param>
     /// <returns></returns>
-    public async Task<byte[]> GetRewardUpdateRequest(byte[] pubKey)
+    public async Task<byte[]?> GetRewardUpdateRequest(byte[] pubKey)
     {
-        return await _hubConnection.InvokeAsync<byte[]>("RewardUpdateRequest", pubKey);
+        byte[]? rewards = null;
+        
+        try
+        {
+            rewards = await _hubConnection.InvokeAsync<byte[]>("RewardUpdateRequest", pubKey);
+        }
+        catch (Exception)
+        {
+            // Ignore
+        }
+
+        return rewards;
     }
 
     /// <summary>
