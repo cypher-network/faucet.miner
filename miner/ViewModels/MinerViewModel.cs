@@ -122,12 +122,19 @@ public class MinerViewModel : ViewModelBase
         _connectionService.CountDownReceived.Subscribe(countdown => { CountDown = $"{countdown}s"; });
         _connectionService.RewardReceived.Subscribe(reward =>
         {
-            var msg = Crypto.BoxSealOpen(reward, _sessionService.KeyPair.PrivateKey,
-                _sessionService.KeyPair.PublicKey[1..33]);
-            if (msg.Length == 0) return;
-            var result = MessagePack.MessagePackSerializer.Deserialize<Reward>(msg);
-            Reward += result.Amount.DivCoin();
-            WonProofCount += 1;
+            try
+            {
+                var msg = Crypto.BoxSealOpen(reward, _sessionService.KeyPair.PrivateKey,
+                    _sessionService.KeyPair.PublicKey[1..33]);
+                if (msg.Length == 0) return;
+                var result = MessagePack.MessagePackSerializer.Deserialize<Reward>(msg);
+                Reward += result.Amount.DivCoin();
+                WonProofCount += 1;
+            }
+            catch (Exception ex)
+            {
+                this.Log().Error(ex.Message);
+            }
         });
 
         StartCommandContent = "Start Miner";
@@ -192,6 +199,7 @@ public class MinerViewModel : ViewModelBase
                 {
                     var pubKey = _sessionService.KeyPair.PublicKey;
                     var cipher = await _connectionService.GetRewardUpdateRequest(pubKey);
+                    if (cipher is null) return Reward;
                     var msg = Crypto.BoxSealOpen(cipher, _sessionService.KeyPair.PrivateKey, pubKey[1..33]);
                     if (msg.Length == 0) return Reward;
                     var result = MessagePack.MessagePackSerializer.Deserialize<Reward>(msg);
