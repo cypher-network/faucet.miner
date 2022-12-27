@@ -21,5 +21,5 @@ public record BlockMinerProof
     [Key(7)] public byte[] Address { get; init; }
     [Key(8)] public long Locktime { get; init; }
     [Key(9)] public byte[] LocktimeScript { get; init; }
-    [IgnoreMember] public long HashRate { get; init; }
+    [IgnoreMember] public double SlowHashElapsedTime { get; init; }
 }

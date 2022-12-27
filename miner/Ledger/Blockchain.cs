@@ -33,15 +33,21 @@ public interface IBlockchain
     bool Busy { get; }
 }
 
+public class SlowHashValue
+{
+    public byte[] Nonce { get; init; }
+    public double Elapsed { get; init; }
+}
+
 /// <summary>
 /// 
 /// </summary>
 public class Blockchain : IBlockchain, IDisposable
 {
+    private const int BitTime = 4600;
     private const int LockTimeInMilliseconds = 10000;
-    private const int StopSolutionInMilliseconds = 10000;
     private const int StopSlothInMilliseconds = 10000;
-
+    
     private readonly CancellationTokenSource _cancellation = new();
     private readonly ISessionService _sessionService;
 
@@ -90,7 +96,7 @@ public class Blockchain : IBlockchain, IDisposable
                 PublicKey = _sessionService.KeyPair.PublicKey,
                 VrfProof = calculatedVrfSignature,
                 VrfSig = verifyVrfSignature,
-                HashRate = solution.HashRatePerSecond
+                SlowHashElapsedTime = slow.Elapsed
             };
         }
         finally
@@ -195,23 +201,26 @@ public class Blockchain : IBlockchain, IDisposable
     /// <param name="vrfSignature"></param>
     /// <param name="bits"></param>
     /// <returns></returns>
-    private async Task<byte[]> GetNonceAsync(byte[] vrfSignature, int bits)
+    private async Task<SlowHashValue?> GetNonceAsync(byte[] vrfSignature, int bits)
     {
         var x = System.Numerics.BigInteger.Parse(vrfSignature.ByteToHex(), NumberStyles.AllowHexSpecifier);
         if (x.Sign <= 0) x = -x;
         var nonceHash = Array.Empty<byte>();
+        var sloth = new Sloth(StopSlothInMilliseconds, _cancellation.Token);
+        SlowHashValue? slow = null;
+        
         try
         {
-            var sloth = new Sloth(StopSlothInMilliseconds, _cancellation.Token);
             var nonce = await sloth.EvalAsync(bits, x);
             if (!string.IsNullOrEmpty(nonce)) nonceHash = nonce.ToBytes();
+            slow = new SlowHashValue { Elapsed = sloth.Elapsed, Nonce = nonceHash };
         }
         catch (Exception)
         {
             // Ignore
         }
 
-        return nonceHash;
+        return slow;
     }
 
     /// <summary>
