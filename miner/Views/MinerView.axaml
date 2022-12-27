@@ -7,9 +7,9 @@
 
     <Panel>
         <Image Width="250" Height="60" Source="/Assets/cypherpunkswritecode.png" VerticalAlignment="Top" HorizontalAlignment="Left" Stretch="UniformToFill" Margin="35,25, 10, 10"/>
-        <Button Command="{Binding PkCommand}" Content="PK" Width="50" Height="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Top" Margin="820,5"/>
-        <TextBlock FontSize="15" FontWeight="Bold" Text="{Binding Greeting}"  VerticalAlignment="Top" TextAlignment="Right" Margin="10,60"/>
-        <TextBlock x:Name="TextBlockHashRate" FontSize="15" FontWeight="Bold" Text="{Binding HashRate}"  VerticalAlignment="Top" TextAlignment="Right" Margin="10,85"/>
+        <Button Command="{Binding PkCommand}" Content="PK" Width="50" Height="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Top" Margin="820,35"/>
+        <TextBlock FontSize="15" FontWeight="Bold" Text="{Binding Greeting}"  VerticalAlignment="Top" TextAlignment="Right" Margin="10,90"/>
+        <TextBlock x:Name="TextBlockHashRate" FontSize="15" FontWeight="Bold" Text="{Binding HashRate}"  VerticalAlignment="Top" TextAlignment="Right" Margin="10,110"/>
         <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto, Auto, 30, Auto, Auto, Auto" Margin="50,100,0,0" ShowGridLines="False">
             <TextBlock Grid.Row="0" Grid.Column="0" FontSize="50" FontWeight="ExtraBold" Text="Next block in:" MinWidth="120" TextAlignment="Center" Margin="70,25,0,0"/>
             <TextBlock Grid.Row="1" Grid.Column="0" FontSize="90" FontWeight="ExtraBold" Text="{Binding CountDown}" MinWidth="120" TextAlignment="Center" Margin="70,0,0,0"/>
