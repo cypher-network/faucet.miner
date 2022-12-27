@@ -3,7 +3,6 @@
 
 using System;
 using libsignal.ecc;
-using NitraLibSodium.Box;
 
 namespace Miner.Cryptography;
 
@@ -45,12 +44,18 @@ public static class Crypto
     /// <param name="secretKey"></param>
     /// <param name="publicKey"></param>
     /// <returns></returns>
-    public static byte[] BoxSealOpen(byte[] cipher, byte[] secretKey, byte[] publicKey)
+    public static unsafe ReadOnlyMemory<byte> BoxSealOpen(ReadOnlySpan<byte> cipher, ReadOnlySpan<byte> secretKey, ReadOnlySpan<byte> publicKey)
     {
-        var msg = new byte[cipher.Length];
-        return Box.SealOpen(msg, cipher, (ulong)cipher.Length, publicKey, secretKey) != 0
-            ? Array.Empty<byte>()
-            : msg;
+        var len = cipher.Length;
+        var msg = stackalloc byte[len];
+        int result;
+        fixed (byte* cPtr = cipher, pkPtr = publicKey, skPtr = secretKey)
+        {
+            result = Box.SealOpen(msg, cPtr, (ulong)cipher.Length, pkPtr, skPtr);
+        }
+        
+        var destination = new Span<byte>(msg, len);
+        return result != 0 ? ReadOnlyMemory<byte>.Empty : destination[..len].ToArray();
     }
 
     /// <summary>
@@ -59,12 +64,20 @@ public static class Crypto
     /// <param name="msg"></param>
     /// <param name="publicKey"></param>
     /// <returns></returns>
-    public static byte[] BoxSeal(byte[] msg, byte[] publicKey)
+    public static ReadOnlyMemory<byte> BoxSeal(ReadOnlyMemory<byte> msg, ReadOnlyMemory<byte> publicKey)
     {
         var cipher = new byte[msg.Length + (int)Box.Sealbytes()];
-        return Box.Seal(cipher, msg, (ulong)msg.Length, publicKey) != 0
-            ? Array.Empty<byte>()
-            : cipher;
+        var result = 0;
+        
+        unsafe
+        {
+            fixed (byte* mPtr = msg.Span, cPtr = cipher, pkPtr = publicKey.Span)
+            {
+                result = Box.Seal(cPtr, mPtr, (ulong)msg.Span.Length, pkPtr);
+            }
+        }
+        
+        return result != 0 ? Memory<byte>.Empty : cipher.AsMemory();
     }
 
     /// <summary>

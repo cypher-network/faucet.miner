@@ -183,19 +183,28 @@ public class MinerViewModel : ViewModelBase
         try
         {
             await _connectionService.ConnectAsync();
-            _connectionService.ConnectionState.Subscribe(x =>
+        }
+        catch (Exception ex)
+        {
+            this.Log().Error("Something bad happened: {0}", ex.Message);
+            return;
+        }
+
+        _connectionService.ConnectionState.Subscribe(x =>
+        {
+            Connected = x == HubConnectionState.Connected;
+            if (!Connected)
             {
-                Connected = x == HubConnectionState.Connected;
-                if (!Connected)
-                {
-                    StartCommandContent = "Start Miner";
-                    return;
-                }
+                StartCommandContent = "Start Miner";
+                return;
+            }
 
-                StartCommandContent = "Stop Miner";
-                _sessionService.Address = Address.ToBytes();
+            StartCommandContent = "Stop Miner";
+            _sessionService.Address = Address.ToBytes();
 
-                Reward = AsyncHelper.RunSync(async delegate
+            Reward = AsyncHelper.RunSync(async delegate
+            {
+                try
                 {
                     var pubKey = _sessionService.KeyPair.PublicKey;
                     var cipher = await _connectionService.GetRewardUpdateRequest(pubKey);
@@ -204,38 +213,46 @@ public class MinerViewModel : ViewModelBase
                     if (msg.Length == 0) return Reward;
                     var result = MessagePack.MessagePackSerializer.Deserialize<Reward>(msg);
                     Reward = result.Amount.DivCoin();
-                    return Reward;
-                });
-
-                _sessionService.RemotePublicKey = AsyncHelper.RunSync(_connectionService.GetRemotePublicKey);
-                _connectionService.BlockReceived.Subscribe(async block =>
+                }
+                catch (Exception ex)
                 {
-                    CountDown = "New block..";
-                    if (!_blockchain.Busy)
-                    {
-                        CountDown = "Hashing...";
-                        var blockProof = await Task.Run(async () => await _blockchain.NewProof(block)).ConfigureAwait(false);
-                        if (blockProof is null) return;
+                    this.Log().Error("Something bad happened: {0}", ex.Message);
+                }
 
-                        HashRate = $"Hash Rate: {blockProof.HashRate} PS";
-                        var proof = Crypto.BoxSeal(MessagePack.MessagePackSerializer.Serialize(blockProof),
-                            _sessionService.RemotePublicKey);
-
-                        await _connectionService.SendBlockProofAsync(proof);
-                        CountDown = "Proof sent!";
-                        SentProofCount++;
-                    }
-                    else
-                    {
-                        CountDown = "Miner busy...";
-                    }
-                });
+                return Reward;
             });
-        }
-        catch (Exception ex)
-        {
-            this.Log().Error("Something bad happened: {0}", ex.Message);
-        }
+            _connectionService.BlockReceived.Subscribe(async block =>
+            {
+                CountDown = "New block..";
+                if (!_blockchain.Busy)
+                {
+                    try
+                    {
+                        _sessionService.RemotePublicKey ??= await _connectionService.GetRemotePublicKey();
+                        CountDown = "Hashing...";
+                        await Task.Run(async () =>
+                        {
+                            var blockProof = await _blockchain.NewProof(block);
+                            if (blockProof is null) return;
+                            HashRate = $"Sloth: {blockProof.SlowHashElapsedTime:F2}s";
+                            var msg = await Utils.SerializeAsync(blockProof);
+                            var proof = Crypto.BoxSeal(msg.First, _sessionService.RemotePublicKey);
+                            await _connectionService.SendBlockProofAsync(proof.ToArray());
+                            CountDown = "Proof sent!";
+                            SentProofCount++;
+                        }).ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.Log().Error("Something bad happened: {0}", ex.Message);
+                    }
+                }
+                else
+                {
+                    CountDown = "Miner busy...";
+                }
+            });
+        });
     }
 
     /// <summary>

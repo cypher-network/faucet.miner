@@ -1,7 +1,11 @@
 using System;
+using System.Buffers;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
+using MessagePack;
+using Microsoft.IO;
 
 namespace Miner.Helper;
 
@@ -11,7 +15,8 @@ namespace Miner.Helper;
 public static class Utils
 {
     public const int Coin = 1000_000_000;
-
+    public static readonly RecyclableMemoryStreamManager Manager = new();
+    
     /// <summary>
     /// 
     /// </summary>
@@ -120,5 +125,13 @@ public static class Utils
     public static decimal DivCoin(this ulong value)
     {
         return Convert.ToDecimal(value) / Coin; ;
+    }
+    
+    public static async Task<ReadOnlySequence<byte>> SerializeAsync<T>(T value)
+    {
+        await using var stream =
+            Manager.GetStream(MessagePackSerializer.Serialize(value)) as
+                RecyclableMemoryStream;
+        return stream.GetReadOnlySequence();
     }
 }

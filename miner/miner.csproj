@@ -7,7 +7,8 @@
         <TrimMode>copyused</TrimMode>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <RootNamespace>Miner</RootNamespace>
-        <AssemblyVersion>0.0.9.0</AssemblyVersion>
+        <AssemblyVersion>0.0.10.0</AssemblyVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="Models\" />
@@ -29,10 +30,11 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
         <PackageReference Include="Blake3" Version="0.5.1" />
         <PackageReference Include="libsignal-protocol-dotnet" Version="2.8.1" />
+        <PackageReference Include="libsodium" Version="1.0.18.4" />
         <PackageReference Include="MessagePack" Version="2.4.59" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.11" />
+        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
         <PackageReference Include="NBitcoin" Version="5.0.83" />
-        <PackageReference Include="NitraLibSodium" Version="1.0.1" />
         <PackageReference Include="ReactiveUI" Version="18.4.1" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
         <PackageReference Include="Splat" Version="14.6.1" />

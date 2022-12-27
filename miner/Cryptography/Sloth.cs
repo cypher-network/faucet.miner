@@ -20,6 +20,7 @@ public class Sloth
     private readonly int _runForMs;
     private readonly CancellationToken _stoppingToken;
 
+    public double Elapsed { get; private set; }
     /// <summary>
     /// </summary>
     /// <param name="runForMs"></param>
@@ -179,6 +180,7 @@ public class Sloth
             finally
             {
                 sw.Stop();
+                Elapsed = sw.Elapsed.TotalSeconds;
             }
         }, TaskCreationOptions.LongRunning).ConfigureAwait(false);
     }
